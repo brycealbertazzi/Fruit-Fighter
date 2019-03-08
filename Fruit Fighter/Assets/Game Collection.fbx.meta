@@ -1,0 +1,206 @@
+fileFormatVersion: 2
+guid: 8392b475757f30345ab00721a8c1b3c0
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Apple
+    100002: Banana
+    100004: block
+    100006: block.001
+    100008: centerpiece
+    100010: centerpiece.001
+    100012: corner.001
+    100014: corner.002
+    100016: corner.003
+    100018: corner.004
+    100020: cornerpiece
+    100022: cornerpiece.001
+    100024: edgepiece
+    100026: edgepiece.001
+    100028: floor
+    100030: floor/corners
+    100032: //RootNode
+    100034: jagpiece
+    100036: jagpiece.001
+    100038: wall
+    100040: wall.001
+    100042: wall.002
+    100044: wall.003
+    400000: Apple
+    400002: Banana
+    400004: block
+    400006: block.001
+    400008: centerpiece
+    400010: centerpiece.001
+    400012: corner.001
+    400014: corner.002
+    400016: corner.003
+    400018: corner.004
+    400020: cornerpiece
+    400022: cornerpiece.001
+    400024: edgepiece
+    400026: edgepiece.001
+    400028: floor
+    400030: floor/corners
+    400032: //RootNode
+    400034: jagpiece
+    400036: jagpiece.001
+    400038: wall
+    400040: wall.001
+    400042: wall.002
+    400044: wall.003
+    2100000: Orange
+    2100002: Gray
+    2100004: Dark Gray
+    2100006: Black
+    2100008: Yellow
+    2100010: Apple Red
+    2300000: Apple
+    2300002: Banana
+    2300004: block
+    2300006: block.001
+    2300008: centerpiece
+    2300010: centerpiece.001
+    2300012: corner.001
+    2300014: corner.002
+    2300016: corner.003
+    2300018: corner.004
+    2300020: cornerpiece
+    2300022: cornerpiece.001
+    2300024: edgepiece
+    2300026: edgepiece.001
+    2300028: floor
+    2300030: jagpiece
+    2300032: jagpiece.001
+    2300034: wall
+    2300036: wall.001
+    2300038: wall.002
+    2300040: wall.003
+    3300000: Apple
+    3300002: Banana
+    3300004: block
+    3300006: block.001
+    3300008: centerpiece
+    3300010: centerpiece.001
+    3300012: corner.001
+    3300014: corner.002
+    3300016: corner.003
+    3300018: corner.004
+    3300020: cornerpiece
+    3300022: cornerpiece.001
+    3300024: edgepiece
+    3300026: edgepiece.001
+    3300028: floor
+    3300030: jagpiece
+    3300032: jagpiece.001
+    3300034: wall
+    3300036: wall.001
+    3300038: wall.002
+    3300040: wall.003
+    4300000: block.001
+    4300002: floor
+    4300004: corner.001
+    4300006: corner.002
+    4300008: corner.003
+    4300010: corner.004
+    4300012: wall
+    4300014: wall.003
+    4300016: wall.002
+    4300018: wall.001
+    4300020: edgepiece
+    4300022: edgepiece.001
+    4300024: cornerpiece.001
+    4300026: cornerpiece
+    4300028: jagpiece.001
+    4300030: jagpiece
+    4300032: block
+    4300034: centerpiece.001
+    4300036: centerpiece
+    4300038: Banana
+    4300040: Apple
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
