@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8392b475757f30345ab00721a8c1b3c0
+guid: 20693b12275171e43a8c9cc769cd000c
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -9,7 +9,6 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: floor.corners
-    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

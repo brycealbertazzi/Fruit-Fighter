@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Apple : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
     private Camera playerCamera;
-
+    private Rigidbody rigidbody;
+    
     void Start()
     {
         playerCamera = GetComponentInChildren<Camera>();
-        playerCamera.enabled = false;
+        rigidbody = GetComponent<Rigidbody>();
+        playerCamera.enabled = true;
     }
+
     [SerializeField] private float playerSpeed;
-    private float cos45 = Mathf.Sqrt(2) / 2;
-    void Update() {
+    void FixedUpdate() {
         RotateWithMouse();
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            playerCamera.enabled = true;
-        } else if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            playerCamera.enabled = false;
-        }
+    
         //Handle movement
         if (Input.GetKey(KeyCode.W))
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
+    
     public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
     //Awake is always called before any Start functions
     void Awake()
@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     // Start is called before the first frame update
-    
     void Start()
     {
         
