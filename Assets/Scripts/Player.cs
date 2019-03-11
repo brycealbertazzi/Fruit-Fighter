@@ -7,36 +7,45 @@ public class Player : MonoBehaviour
 
     private Camera playerCamera;
     private Rigidbody rigidbody;
-    
+
     void Start()
     {
         playerCamera = GetComponentInChildren<Camera>();
         rigidbody = GetComponent<Rigidbody>();
-        playerCamera.enabled = true;
+
+        rigidbody.freezeRotation = true;
     }
 
     [SerializeField] private float playerSpeed;
+    [SerializeField] private float junpForce;
+    float timeSinceJump = 10; //An arbitrary value which allows jumping
     void FixedUpdate() {
+        timeSinceJump += Time.fixedDeltaTime; 
         RotateWithMouse();
-    
-        //Handle movement
-        if (Input.GetKey(KeyCode.W))
+        //Handle movement w/ rigidbodies
+        if (Input.GetAxisRaw("Vertical") > 0)
         {
-            transform.Translate(new Vector3(0, 0, playerSpeed) * Time.deltaTime);
+            rigidbody.MovePosition(transform.position + (transform.forward * Time.fixedDeltaTime * playerSpeed));
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetAxisRaw("Vertical") < 0) {
+            rigidbody.MovePosition(transform.position + (-transform.forward * Time.fixedDeltaTime * playerSpeed));
+        }
+        if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            transform.Translate(new Vector3(-playerSpeed, 0, 0) * Time.deltaTime);
+            rigidbody.MovePosition(transform.position + (transform.right * Time.fixedDeltaTime * playerSpeed));
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            transform.Translate(new Vector3(0, 0, -playerSpeed) * Time.deltaTime);
+            rigidbody.MovePosition(transform.position + (-transform.right * Time.fixedDeltaTime * playerSpeed));
         }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(new Vector3(playerSpeed, 0, 0) * Time.deltaTime);
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (timeSinceJump > 0.7f)
+            {
+                rigidbody.AddForce(new Vector3(0, junpForce, 0), ForceMode.Impulse);
+                timeSinceJump = 0;
+            }
         }
-     
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, 0, 10), transform.position.z);
     }
 
     [SerializeField] private float rotationSpeed;
