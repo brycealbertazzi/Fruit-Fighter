@@ -5,15 +5,18 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    private Camera playerCamera;
+    [SerializeField] private Transform head;
+
     private Rigidbody rigidbody;
+    private Animator pAnim;
 
     void Start()
     {
-        playerCamera = GetComponentInChildren<Camera>();
         rigidbody = GetComponent<Rigidbody>();
+        pAnim = GetComponentInChildren<Animator>();
 
         rigidbody.freezeRotation = true;
+        pAnim.SetBool("isShooting", false);
     }
 
     [SerializeField] private float playerSpeed;
@@ -25,32 +28,44 @@ public class Player : MonoBehaviour
         //Handle movement w/ rigidbodies
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-            rigidbody.MovePosition(transform.position + (transform.forward * Time.fixedDeltaTime * playerSpeed));
+            rigidbody.MovePosition(transform.position + (head.transform.forward * Time.fixedDeltaTime * playerSpeed));
         }
         else if (Input.GetAxisRaw("Vertical") < 0) {
-            rigidbody.MovePosition(transform.position + (-transform.forward * Time.fixedDeltaTime * playerSpeed));
+            rigidbody.MovePosition(transform.position + (-head.transform.forward * Time.fixedDeltaTime * playerSpeed));
         }
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            rigidbody.MovePosition(transform.position + (transform.right * Time.fixedDeltaTime * playerSpeed));
+            rigidbody.MovePosition(transform.position + (head.transform.right * Time.fixedDeltaTime * playerSpeed));
         }
         else if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            rigidbody.MovePosition(transform.position + (-transform.right * Time.fixedDeltaTime * playerSpeed));
+            rigidbody.MovePosition(transform.position + (-head.transform.right * Time.fixedDeltaTime * playerSpeed));
         }
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            if (timeSinceJump > 0.7f)
-            {
-                rigidbody.AddForce(new Vector3(0, junpForce, 0), ForceMode.Impulse);
-                timeSinceJump = 0;
-            }
-        }
-        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, 0, 10), transform.position.z);
+        
     }
 
-    [SerializeField] private float rotationSpeed;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (timeSinceJump > 1.0f)
+            {
+                pAnim.SetTrigger("jump");
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            pAnim.SetBool("isShooting", true);
+        }
+        if (Input.GetMouseButtonUp(0)) {
+            pAnim.SetBool("isShooting", false);
+        }
+    }
+
+
+    [SerializeField] private float sensitivity;
     void RotateWithMouse() {
-        transform.Rotate(0, Input.GetAxis("Mouse X") * rotationSpeed, 0, Space.Self);
+        head.transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0, Space.Self);
     }
 
 }

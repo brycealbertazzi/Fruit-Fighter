@@ -24,15 +24,21 @@ public class GameManager : MonoBehaviour
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
     }
-    // Start is called before the first frame update
+
+    [SerializeField] private AudioSource audioSource;
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+
+        audioSource.playOnAwake = true;
+        audioSource.loop = true;
+        audioSource.volume = 0.21f;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.M)) {
+            audioSource.mute = !audioSource.mute; //If true make false, if false make truett
+        }
     }
 }
