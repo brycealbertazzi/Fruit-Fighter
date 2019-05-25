@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField] private Transform head;
+    [SerializeField] private Transform gunTip;
+    [SerializeField] private GameObject bullet;
 
     private Rigidbody rigidbody;
     private Animator pAnim;
@@ -56,10 +58,19 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) {
             pAnim.SetBool("isShooting", true);
+            InvokeRepeating("FireMachineGunBullet", 0, (1 / bulletSpeed));
         }
         if (Input.GetMouseButtonUp(0)) {
             pAnim.SetBool("isShooting", false);
+            CancelInvoke("FireMachineGunBullet");
         }
+    }
+    
+    public float bulletSpeed;
+    void FireMachineGunBullet() {
+        GameObject firedBullet = Instantiate(bullet, gunTip.transform.position, gunTip.transform.rotation, GameObject.Find("Bullets").transform) as GameObject;
+        firedBullet.GetComponent<BoxCollider>().enabled = false;
+        firedBullet.GetComponent<Rigidbody>().velocity = firedBullet.transform.forward * bulletSpeed;
     }
 
 
