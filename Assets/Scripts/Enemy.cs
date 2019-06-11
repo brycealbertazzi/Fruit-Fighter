@@ -6,18 +6,28 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
 
-    [SerializeField] private GameObject target;
+    private GameObject target;
     private NavMeshAgent navmesh;
+    private Animator anim;
+
     void Start()
     {
         navmesh = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+        target = FindObjectOfType<Player>().gameObject;
     }
 
     void Update()
     {
         navmesh.SetDestination(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
-        /*
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            anim.Play("Hit");
+        }
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            anim.Play("Walk");
+        }
+        /* Cool piece of code
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

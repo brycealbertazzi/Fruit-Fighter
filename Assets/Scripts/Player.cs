@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) {
             pAnim.SetBool("isShooting", true);
-            InvokeRepeating("FireMachineGunBullet", 0, (1 / bulletSpeed));
+            InvokeRepeating("FireMachineGunBullet", 0, fireRate);
         }
         if (Input.GetMouseButtonUp(0)) {
             pAnim.SetBool("isShooting", false);
@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
     }
     
     public float bulletSpeed;
+    public float fireRate;
     void FireMachineGunBullet() {
         GameObject firedBullet = Instantiate(bullet, gunTip.transform.position, gunTip.transform.rotation, GameObject.Find("Bullets").transform) as GameObject;
         firedBullet.GetComponent<BoxCollider>().enabled = false;
