@@ -8,17 +8,26 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform head;
     [SerializeField] private Transform gunTip;
     [SerializeField] private GameObject bullet;
+    [SerializeField] private int bulletsInClip;
+    [SerializeField] private int maxBulletsInClip;
+    [SerializeField] private float reloadTime;
 
-    private Rigidbody rigidbody;
+    private Rigidbody rBody;
     private Animator pAnim;
+   
+    private bool hasMaxClip;
+    private bool isReloading;
 
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rBody = GetComponent<Rigidbody>();
         pAnim = GetComponentInChildren<Animator>();
 
-        rigidbody.freezeRotation = true;
+        rBody.freezeRotation = true;
         pAnim.SetBool("isShooting", false);
+        bulletsInClip = maxBulletsInClip;
+        hasMaxClip = true;
+        isReloading = false;
     }
 
     [SerializeField] private float playerSpeed;
@@ -30,19 +39,21 @@ public class Player : MonoBehaviour
         //Handle movement w/ rigidbodies
         if (Input.GetAxisRaw("Vertical") > 0)
         {
-            rigidbody.MovePosition(transform.position + (head.transform.forward * Time.fixedDeltaTime * playerSpeed));
+            rBody.MovePosition(transform.position + (head.transform.forward * Time.fixedDeltaTime * playerSpeed));
         }
         else if (Input.GetAxisRaw("Vertical") < 0) {
-            rigidbody.MovePosition(transform.position + (-head.transform.forward * Time.fixedDeltaTime * playerSpeed));
+            rBody.MovePosition(transform.position + (-head.transform.forward * Time.fixedDeltaTime * playerSpeed));
         }
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            rigidbody.MovePosition(transform.position + (head.transform.right * Time.fixedDeltaTime * playerSpeed));
+            rBody.MovePosition(transform.position + (head.transform.right * Time.fixedDeltaTime * playerSpeed));
         }
         else if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            rigidbody.MovePosition(transform.position + (-head.transform.right * Time.fixedDeltaTime * playerSpeed));
+            rBody.MovePosition(transform.position + (-head.transform.right * Time.fixedDeltaTime * playerSpeed));
         }
+
+        
         
     }
 
@@ -56,24 +67,47 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (!hasMaxClip && !isReloading) //Prevents reload if player has a max clip or is currently reloading
+            {
+                isReloading = true;
+                Invoke("Reload", reloadTime);
+                pAnim.SetTrigger("reloadTrigger");
+            }
+        }
+
+       
+        if (Input.GetMouseButtonDown(0) && bulletsInClip > 0 && !isReloading)
+        {
             pAnim.SetBool("isShooting", true);
-            InvokeRepeating("FireMachineGunBullet", 0, fireRate);
+            InvokeRepeating("FireMachineGunBullet", 0, (1 / fireRate));
         }
-        if (Input.GetMouseButtonUp(0)) {
-            pAnim.SetBool("isShooting", false);
-            CancelInvoke("FireMachineGunBullet");
+        if (Input.GetMouseButtonUp(0) || bulletsInClip <= 0 || isReloading)
+        {
+                pAnim.SetBool("isShooting", false);
+                CancelInvoke("FireMachineGunBullet");
         }
+        
     }
     
     public float bulletSpeed;
     public float fireRate;
+    [SerializeField] private AudioClip fireSound;
     void FireMachineGunBullet() {
         GameObject firedBullet = Instantiate(bullet, gunTip.transform.position, gunTip.transform.rotation, GameObject.Find("Bullets").transform) as GameObject;
         firedBullet.GetComponent<BoxCollider>().enabled = false;
         firedBullet.GetComponent<Rigidbody>().velocity = firedBullet.transform.forward * bulletSpeed;
+        GetComponent<AudioSource>().PlayOneShot(fireSound, 0.6f);
+        bulletsInClip--;
+        hasMaxClip = false;
     }
 
+    void Reload() {
+        bulletsInClip = maxBulletsInClip;
+        hasMaxClip = true;
+        isReloading = false;
+    }
 
     [SerializeField] private float sensitivity;
     void RotateWithMouse() {

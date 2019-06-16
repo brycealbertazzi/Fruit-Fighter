@@ -812,7 +812,7 @@ GameObject:
   - component: {fileID: 1918614298289145638}
   m_Layer: 0
   m_Name: enemy.droid
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -876,7 +876,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f6e0f1ac1a09a4098319e81575c734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 4063383427039243888, guid: d6d04af6cdac43040bd591c21a5158fc, type: 3}
+  health: 100
+  deathSound: {fileID: 8300000, guid: e130f1f0292a58940bade6fe7ef7d1b2, type: 3}
+  deathEffect: {fileID: 334962687175326331, guid: 2f8877277be9a9e4a8334590662ba9da,
+    type: 3}
 --- !u!195 &1918614298289145638
 NavMeshAgent:
   m_ObjectHideFlags: 0

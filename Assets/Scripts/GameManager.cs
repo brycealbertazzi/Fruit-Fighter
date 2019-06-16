@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(AudioListener))]
 public class GameManager : MonoBehaviour
 {
 
@@ -37,11 +35,6 @@ public class GameManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         playerCamera = player.transform.Find("Droid").transform.Find("Head").transform.Find("PlayerCamera").gameObject;
-
-        audioSource.playOnAwake = true;
-        audioSource.loop = true;
-        audioSource.volume = 0.21f;
-        audioSource.Play();
 
         Instantiate(player, playerStartLocation.position, Quaternion.identity);
     }
