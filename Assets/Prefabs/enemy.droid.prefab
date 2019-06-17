@@ -880,6 +880,8 @@ MonoBehaviour:
   deathSound: {fileID: 8300000, guid: e130f1f0292a58940bade6fe7ef7d1b2, type: 3}
   deathEffect: {fileID: 334962687175326331, guid: 2f8877277be9a9e4a8334590662ba9da,
     type: 3}
+  hitsPerSecond: 1
+  damageDealtOnHit: 10
 --- !u!195 &1918614298289145638
 NavMeshAgent:
   m_ObjectHideFlags: 0

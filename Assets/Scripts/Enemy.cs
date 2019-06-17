@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent navmesh;
     private Animator anim;
     private SkinnedMeshRenderer enemyMesh;
+    private bool isAttacking = false;
 
     [SerializeField] private int health = 100;
 
@@ -31,6 +32,12 @@ public class Enemy : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space)) {
             anim.Play("Walk");
         }
+
+        if (EnemyInRadius() && !isAttacking) {
+            isAttacking = true;
+            StartCoroutine("DamagePlayerCoroutine");
+        }
+
     }
 
     private void OnTriggerEnter(Collider col)
@@ -40,8 +47,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void TakeHit(int amount) {
-        health -= amount;
+    void TakeHit(int damage) {
+        health -= damage;
         if (health <= 0) {
             Die();
         }
@@ -64,7 +71,35 @@ public class Enemy : MonoBehaviour
         Destroy(dieParticleSystem.gameObject);
     }
 
-    /* Cool piece of code
+    [SerializeField] private float hitsPerSecond;
+    IEnumerator DamagePlayerCoroutine() {
+        if (!EnemyInRadius())
+        {
+            StopCoroutine("DamagePlayerCoroutine");
+            isAttacking = false;
+        }
+        else
+        {
+            Debug.Log("Hit");
+            DamagePlayer(damageDealtOnHit);
+            yield return new WaitForSeconds(1 / hitsPerSecond);
+            StartCoroutine(DamagePlayerCoroutine());
+        }
+    }
+
+    [SerializeField] private int damageDealtOnHit;
+    void DamagePlayer(int damage) {
+        target.GetComponent<Player>().TakeHit(damage);
+    }
+
+    bool EnemyInRadius() {
+        Vector3 enemyToPlayer = transform.position - target.transform.position;
+        return Mathf.Abs(enemyToPlayer.magnitude) < navmesh.stoppingDistance; //Damage player if enemy is held at its stopping distance
+    }
+
+}
+
+/* Cool piece of code
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -78,4 +113,3 @@ public class Enemy : MonoBehaviour
             }
         }
         */
-}

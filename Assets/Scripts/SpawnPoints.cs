@@ -11,7 +11,7 @@ public class SpawnPoints : MonoBehaviour
 
     void Start()
     {
-        GameManager.instance.enemiesLeftInRound = 8;
+        GameManager.instance.enemiesLeftInRound = 1;
         initialRoundSpawnDelay = Mathf.Clamp(initialRoundSpawnDelay, 1, 6);
         Invoke("SpawnEnemy", initialRoundSpawnDelay);
     }

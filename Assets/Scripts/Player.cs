@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -11,23 +12,35 @@ public class Player : MonoBehaviour
     [SerializeField] private int bulletsInClip;
     [SerializeField] private int maxBulletsInClip;
     [SerializeField] private float reloadTime;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float currentHealth;
 
     private Rigidbody rBody;
     private Animator pAnim;
-   
+    private Slider playerSlider;
+    private Text clipDisplay;
+
     private bool hasMaxClip;
     private bool isReloading;
+
 
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
         pAnim = GetComponentInChildren<Animator>();
+        playerSlider = GameObject.Find("PlayerCanvas").GetComponentInChildren<Slider>();
+        clipDisplay = GameObject.Find("PlayerCanvas").GetComponentInChildren<Text>();
 
         rBody.freezeRotation = true;
         pAnim.SetBool("isShooting", false);
         bulletsInClip = maxBulletsInClip;
         hasMaxClip = true;
         isReloading = false;
+
+        maxHealth = 100;
+        currentHealth = maxHealth;
+        UpdateHealthDisplay();
+        UpdateClipDisplay();
     }
 
     [SerializeField] private float playerSpeed;
@@ -59,13 +72,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (timeSinceJump > 1.0f)
-            {
-                pAnim.SetTrigger("jump");
-            }
-        }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -78,19 +84,25 @@ public class Player : MonoBehaviour
         }
 
        
-        if (Input.GetMouseButtonDown(0) && bulletsInClip > 0 && !isReloading)
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading)
         {
             pAnim.SetBool("isShooting", true);
             InvokeRepeating("FireMachineGunBullet", 0, (1 / fireRate));
         }
-        if (Input.GetMouseButtonUp(0) || bulletsInClip <= 0 || isReloading)
+        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || bulletsInClip <= 0 || isReloading)
         {
                 pAnim.SetBool("isShooting", false);
                 CancelInvoke("FireMachineGunBullet");
         }
-        
+
     }
-    
+
+    [SerializeField] private float sensitivity;
+    void RotateWithMouse()
+    {
+        head.transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0, Space.Self);
+    }
+
     public float bulletSpeed;
     public float fireRate;
     [SerializeField] private AudioClip fireSound;
@@ -101,17 +113,34 @@ public class Player : MonoBehaviour
         GetComponent<AudioSource>().PlayOneShot(fireSound, 0.6f);
         bulletsInClip--;
         hasMaxClip = false;
+        UpdateClipDisplay();
     }
 
     void Reload() {
         bulletsInClip = maxBulletsInClip;
         hasMaxClip = true;
         isReloading = false;
+        UpdateClipDisplay();
     }
 
-    [SerializeField] private float sensitivity;
-    void RotateWithMouse() {
-        head.transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0, Space.Self);
+    void UpdateClipDisplay() {
+        clipDisplay.text = bulletsInClip.ToString();
+    }
+
+    void UpdateHealthDisplay() {
+        playerSlider.value = (currentHealth / maxHealth);
+    }
+
+    public void TakeHit(int damage) {
+        currentHealth -= damage;
+        UpdateHealthDisplay();
+        if (currentHealth <= 0) {
+            Die();
+        }
+    }
+
+    void Die() {
+        //End the game
     }
 
 }
