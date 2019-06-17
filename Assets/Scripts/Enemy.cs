@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     private Animator anim;
     private SkinnedMeshRenderer enemyMesh;
     private bool isAttacking = false;
+    private bool isDead = false;
 
     [SerializeField] private int health = 100;
 
@@ -24,26 +25,31 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        navmesh.SetDestination(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
-        
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            anim.Play("Hit");
-        }
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            anim.Play("Walk");
-        }
+        if (GameManager.instance.state == GameManager.GameStates.GameOn)
+        {
+            navmesh.SetDestination(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
 
-        if (EnemyInRadius() && !isAttacking) {
-            isAttacking = true;
-            StartCoroutine("DamagePlayerCoroutine");
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                anim.Play("Hit");
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                anim.Play("Walk");
+            }
 
+            if (EnemyInRadius() && !isAttacking && !isDead)
+            {
+                isAttacking = true;
+                StartCoroutine("DamagePlayerCoroutine");
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider col)
     {
         if (col.tag == "Bullet") {
-            TakeHit(25);
+            TakeHit(Bullet.damage);
         }
     }
 
@@ -56,9 +62,12 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private AudioClip deathSound;
     void Die() {
+        GameManager.instance.totalEnemiesOnMap--;
+        isDead = true;
         enemyMesh.enabled = false;
         StartCoroutine("DeathEffect");
         GetComponent<BoxCollider>().enabled = false;
+        GameManager.instance.UpdateScore();
     }
 
     [SerializeField] private ParticleSystem deathEffect;
@@ -73,7 +82,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private float hitsPerSecond;
     IEnumerator DamagePlayerCoroutine() {
-        if (!EnemyInRadius())
+        if (!EnemyInRadius() || isDead)
         {
             StopCoroutine("DamagePlayerCoroutine");
             isAttacking = false;

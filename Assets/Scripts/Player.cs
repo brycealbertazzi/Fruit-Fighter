@@ -17,8 +17,8 @@ public class Player : MonoBehaviour
 
     private Rigidbody rBody;
     private Animator pAnim;
-    private Slider playerSlider;
-    private Text clipDisplay;
+    [SerializeField] private Slider playerSlider;
+    [SerializeField] private Text clipDisplay;
 
     private bool hasMaxClip;
     private bool isReloading;
@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
     {
         rBody = GetComponent<Rigidbody>();
         pAnim = GetComponentInChildren<Animator>();
-        playerSlider = GameObject.Find("PlayerCanvas").GetComponentInChildren<Slider>();
-        clipDisplay = GameObject.Find("PlayerCanvas").GetComponentInChildren<Text>();
 
         rBody.freezeRotation = true;
         pAnim.SetBool("isShooting", false);
@@ -38,63 +36,61 @@ public class Player : MonoBehaviour
         isReloading = false;
 
         maxHealth = 100;
-        currentHealth = maxHealth;
-        UpdateHealthDisplay();
-        UpdateClipDisplay();
     }
 
     [SerializeField] private float playerSpeed;
-    [SerializeField] private float junpForce;
     float timeSinceJump = 10; //An arbitrary value which allows jumping
     void FixedUpdate() {
-        timeSinceJump += Time.fixedDeltaTime; 
-        RotateWithMouse();
-        //Handle movement w/ rigidbodies
-        if (Input.GetAxisRaw("Vertical") > 0)
+        if (GameManager.instance.state == GameManager.GameStates.GameOn)
         {
-            rBody.MovePosition(transform.position + (head.transform.forward * Time.fixedDeltaTime * playerSpeed));
+            timeSinceJump += Time.fixedDeltaTime;
+            RotateWithMouse();
+            //Handle movement w/ rigidbodies
+            if (Input.GetAxisRaw("Vertical") > 0)
+            {
+                rBody.MovePosition(transform.position + (head.transform.forward * Time.fixedDeltaTime * playerSpeed));
+            }
+            else if (Input.GetAxisRaw("Vertical") < 0)
+            {
+                rBody.MovePosition(transform.position + (-head.transform.forward * Time.fixedDeltaTime * playerSpeed));
+            }
+            if (Input.GetAxisRaw("Horizontal") > 0)
+            {
+                rBody.MovePosition(transform.position + (head.transform.right * Time.fixedDeltaTime * playerSpeed));
+            }
+            else if (Input.GetAxisRaw("Horizontal") < 0)
+            {
+                rBody.MovePosition(transform.position + (-head.transform.right * Time.fixedDeltaTime * playerSpeed));
+            }
         }
-        else if (Input.GetAxisRaw("Vertical") < 0) {
-            rBody.MovePosition(transform.position + (-head.transform.forward * Time.fixedDeltaTime * playerSpeed));
-        }
-        if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            rBody.MovePosition(transform.position + (head.transform.right * Time.fixedDeltaTime * playerSpeed));
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            rBody.MovePosition(transform.position + (-head.transform.right * Time.fixedDeltaTime * playerSpeed));
-        }
-
-        
-        
     }
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.R))
+        if (GameManager.instance.state == GameManager.GameStates.GameOn)
         {
-            if (!hasMaxClip && !isReloading) //Prevents reload if player has a max clip or is currently reloading
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                isReloading = true;
-                Invoke("Reload", reloadTime);
-                pAnim.SetTrigger("reloadTrigger");
+                if (!hasMaxClip && !isReloading) //Prevents reload if player has a max clip or is currently reloading
+                {
+                    isReloading = true;
+                    Invoke("Reload", reloadTime);
+                    pAnim.SetTrigger("reloadTrigger");
+                }
             }
-        }
 
-       
-        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading)
-        {
-            pAnim.SetBool("isShooting", true);
-            InvokeRepeating("FireMachineGunBullet", 0, (1 / fireRate));
-        }
-        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || bulletsInClip <= 0 || isReloading)
-        {
+
+            if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading)
+            {
+                pAnim.SetBool("isShooting", true);
+                InvokeRepeating("FireMachineGunBullet", 0, (1 / fireRate));
+            }
+            if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space) || bulletsInClip <= 0 || isReloading || GameManager.instance.state != GameManager.GameStates.GameOn)
+            {
                 pAnim.SetBool("isShooting", false);
                 CancelInvoke("FireMachineGunBullet");
+            }
         }
-
     }
 
     [SerializeField] private float sensitivity;
@@ -107,13 +103,14 @@ public class Player : MonoBehaviour
     public float fireRate;
     [SerializeField] private AudioClip fireSound;
     void FireMachineGunBullet() {
-        GameObject firedBullet = Instantiate(bullet, gunTip.transform.position, gunTip.transform.rotation, GameObject.Find("Bullets").transform) as GameObject;
-        firedBullet.GetComponent<BoxCollider>().enabled = false;
-        firedBullet.GetComponent<Rigidbody>().velocity = firedBullet.transform.forward * bulletSpeed;
-        GetComponent<AudioSource>().PlayOneShot(fireSound, 0.6f);
-        bulletsInClip--;
-        hasMaxClip = false;
-        UpdateClipDisplay();
+        if (GameManager.instance.state == GameManager.GameStates.GameOn) {
+            GameObject firedBullet = Instantiate(bullet, gunTip.transform.position, gunTip.transform.rotation, GameObject.Find("Bullets").transform) as GameObject;
+            firedBullet.GetComponent<Rigidbody>().velocity = firedBullet.transform.forward * bulletSpeed;
+            GetComponent<AudioSource>().PlayOneShot(fireSound, 0.6f);
+            bulletsInClip--;
+            hasMaxClip = false;
+            UpdateClipDisplay();
+        }
     }
 
     void Reload() {
@@ -131,7 +128,9 @@ public class Player : MonoBehaviour
         playerSlider.value = (currentHealth / maxHealth);
     }
 
+    [SerializeField] private AudioClip playerHit;
     public void TakeHit(int damage) {
+        GetComponent<AudioSource>().PlayOneShot(playerHit, 0.8f);
         currentHealth -= damage;
         UpdateHealthDisplay();
         if (currentHealth <= 0) {
@@ -140,7 +139,14 @@ public class Player : MonoBehaviour
     }
 
     void Die() {
-        //End the game
+        GameManager.instance.GameOver();
+    }
+
+    public void ResetPlayer() {
+        currentHealth = maxHealth;
+        bulletsInClip = maxBulletsInClip;
+        UpdateHealthDisplay();
+        UpdateClipDisplay();
     }
 
 }

@@ -4,26 +4,24 @@ using UnityEngine;
 
 public class SpawnPoints : MonoBehaviour
 {
-    public float spawnRate;
+    public float timeBetweenSpawns;
     public float initialRoundSpawnDelay;
     [SerializeField] private Transform enemyParentTransform;
     [SerializeField] private GameObject enemy;
 
     void Start()
     {
-        GameManager.instance.enemiesLeftInRound = 1;
         initialRoundSpawnDelay = Mathf.Clamp(initialRoundSpawnDelay, 1, 6);
-        Invoke("SpawnEnemy", initialRoundSpawnDelay);
+        
     }
 
-    
-    void SpawnEnemy() {
-        Debug.Log("Enemy Spawned");
-        if (GameManager.instance.enemiesLeftInRound > 0)
+    public void SpawnEnemy()
+    {
+        if (GameManager.instance.state == GameManager.GameStates.GameOn && (GameManager.instance.totalEnemiesOnMap < GameManager.instance.maxEnemiesAllowedOnMap))
         {
+            Debug.Log("Enemy Spawned");
             GameObject instEnemy = Instantiate(enemy, transform.position, Quaternion.identity, enemyParentTransform);
-            GameManager.instance.enemiesLeftInRound--;
+            GameManager.instance.totalEnemiesOnMap++;
         }
     }
-
 }

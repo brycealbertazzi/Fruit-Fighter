@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private float timeTilColliderEnable = 0.1f;
+    public static int damage = 50;
+
     void Start() {
-        Invoke("EnableCollider", timeTilColliderEnable);
         Destroy(gameObject, 7f);
     }
 
-    void EnableCollider() {
-        GetComponent<BoxCollider>().enabled = true;
-    }
-
     void OnTriggerEnter(Collider col) {
-        Destroy(this.gameObject);
+        if (col.gameObject.tag != "Gun")
+        {
+            Destroy(gameObject);
+        }
     }
         
 }
