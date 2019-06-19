@@ -68,50 +68,24 @@ public class GameManager : MonoBehaviour
         score.text = playerScore.ToString();
     }
 
-    private int seconds, minutes, hours = 0;
+    private int seconds, minutes = 0;
     void UpdateTime() {
-        if (minutes >= 59)
+        if (seconds >= 59)
         {
-            minutes = seconds = 0;
-            hours++;
+            seconds = 0;
+            minutes++;
         }
         else
         {
-            if (seconds >= 59)
-            {
-                seconds = 0;
-                minutes++;
-            }
-            else
-            {
-                seconds++;
-            }
+            seconds++;
         }
-        if (hours <= 0) //Under an hour
+        
+        if (seconds < 10)
         {
-            if (seconds < 10)
-            {
-                time.text = minutes.ToString() + ":0" + seconds.ToString();
-            }
-            else {
-                time.text = minutes.ToString() + ":" + seconds.ToString();
-            }
+            time.text = minutes.ToString() + ":0" + seconds.ToString();
         }
-        else { //Over an hour
-            if (seconds < 10 && minutes < 10)
-            {
-                time.text = hours.ToString() + ":0" + minutes.ToString() + ":0" + seconds.ToString();
-            }
-            else if (seconds < 10 && minutes >= 10) {
-                time.text = hours.ToString() + ":" + minutes.ToString() + ":0" + seconds.ToString();
-            }
-            else if (seconds >= 10 && minutes < 10) {
-                time.text = hours.ToString() + ":0" + minutes.ToString() + ":" + seconds.ToString();
-            }
-            else
-            {
-                time.text = hours.ToString() + ":" + minutes.ToString() + ":" + seconds.ToString();
-            }
+        else {
+            time.text = minutes.ToString() + ":" + seconds.ToString();
         }
     }
 
@@ -139,6 +113,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver() {
         state = GameStates.GameOver;
+        CheckHighScore(playerScore);
+        CheckHighTime((minutes * 60) + seconds);
+        GameOverCanvas.transform.Find("Score").GetComponent<Text>().text = playerScore.ToString();
         GameOverCanvas.GetComponent<Canvas>().enabled = true;
         PregameCanvas.GetComponent<Canvas>().enabled = false;
         GameCanvas.GetComponent<Canvas>().enabled = false;
@@ -150,14 +127,59 @@ public class GameManager : MonoBehaviour
         {
             point.CancelInvoke("SpawnEnemy");
         }
+        CancelInvoke("UpdateTime");
+        GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = time.text;
     }
 
     public void ResetGame() {
-        hours = minutes = seconds = 0;
+        minutes = seconds = 0;
         playerScore = 0;
         score.text = playerScore.ToString();
         time.text = "0:00";
         totalEnemiesOnMap = 0;
     }
+
+    //Handle Player Prefs
+    const string HIGH_SCORE_KEY = "HighScore";
+    const string HIGH_TIME_KEY = "HighTime";
+    const string SENSITIVITY_KEY = "Sensitivity";
+
+    void CheckHighScore(int score) {
+        if (score > PlayerPrefs.GetInt(HIGH_SCORE_KEY))
+        {
+            PlayerPrefs.SetInt(HIGH_SCORE_KEY, score);
+            GameOverCanvas.transform.Find("High Score").GetComponent<Text>().text = score.ToString();
+        }
+        else {
+            GameOverCanvas.transform.Find("High Score").GetComponent<Text>().text = PlayerPrefs.GetInt(HIGH_SCORE_KEY).ToString();
+        }
+    }
+
+    void CheckHighTime(int timeInSeconds) {
+        float thisMinutes, thisSeconds;
+        if (timeInSeconds > PlayerPrefs.GetInt(HIGH_TIME_KEY))
+        {
+            PlayerPrefs.SetInt(HIGH_TIME_KEY, timeInSeconds);
+            thisMinutes = Mathf.FloorToInt(timeInSeconds / 60);
+            thisSeconds = timeInSeconds % 60;
+        }
+        else {
+            thisMinutes = Mathf.FloorToInt(PlayerPrefs.GetInt(HIGH_TIME_KEY) / 60);
+            thisSeconds = PlayerPrefs.GetInt(HIGH_TIME_KEY) % 60;
+        }
+        if (thisSeconds < 10)
+        {
+            //GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = thisMinutes.ToString() + ":0" + thisSeconds.ToString();
+        }
+        else {
+            //GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = thisMinutes.ToString() + ":" + thisSeconds.ToString();
+        }
+    }
+
+    void SetSensitivity(float sensitivity) {
+        PlayerPrefs.SetFloat(SENSITIVITY_KEY, sensitivity);
+        player.GetComponent<Player>().sensitivity = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
+    }
+
 
 }

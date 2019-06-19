@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    [SerializeField] private float sensitivity;
+    public float sensitivity;
     void RotateWithMouse()
     {
         head.transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0, Space.Self);

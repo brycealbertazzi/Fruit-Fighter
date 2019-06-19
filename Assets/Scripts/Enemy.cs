@@ -53,10 +53,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    [SerializeField] private ParticleSystem gotHitEffect;
+    [SerializeField] private AudioClip enemyHitSound;
     void TakeHit(int damage) {
         health -= damage;
-        if (health <= 0) {
+        if (health <= 0)
+        {
             Die();
+        }
+        else {
+            FindObjectOfType<Player>().gameObject.GetComponent<AudioSource>().PlayOneShot(enemyHitSound, 0.3f);
+            ParticleSystem gotHitPS = Instantiate(gotHitEffect, transform.position + new Vector3(0, 0.65f, 0), Quaternion.identity) as ParticleSystem;
+            gotHitPS.Play();
         }
     }
 

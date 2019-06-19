@@ -877,6 +877,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  gotHitEffect: {fileID: 5482494417867782624, guid: 6b1526d54f419644fa725e181f9f08a7,
+    type: 3}
+  enemyHitSound: {fileID: 8300000, guid: 78990ca28f0193149a33b08da6c4d157, type: 3}
   deathSound: {fileID: 8300000, guid: e130f1f0292a58940bade6fe7ef7d1b2, type: 3}
   deathEffect: {fileID: 334962687175326331, guid: 2f8877277be9a9e4a8334590662ba9da,
     type: 3}
