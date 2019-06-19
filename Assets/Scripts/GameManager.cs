@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
         score = GameCanvas.transform.Find("Score").GetComponent<Text>();
         time = GameCanvas.transform.Find("Time").GetComponent<Text>();
 
+        LoadPreviousSensitivityValues(); //Start game with previously set sensitivity value
         PreGame();
     }
 
@@ -176,10 +177,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SetSensitivity(float sensitivity) {
-        PlayerPrefs.SetFloat(SENSITIVITY_KEY, sensitivity);
-        player.GetComponent<Player>().sensitivity = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
+    [SerializeField] Scrollbar sensitivityScrollbar;
+    [SerializeField] Text sensitivityText;
+    public void SetPlayerSensitivity() {
+        PlayerPrefs.SetFloat(SENSITIVITY_KEY, sensitivityScrollbar.value);
+        float prefsSensitivityValue = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
+        float canvasSensitivityValue = Mathf.RoundToInt(prefsSensitivityValue * 10);
+        sensitivityText.text = canvasSensitivityValue.ToString();
+        player.GetComponent<Player>().sensitivity = (canvasSensitivityValue / 4) + 0.25f;
     }
 
+    void LoadPreviousSensitivityValues() {
+        sensitivityScrollbar.value = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
+        float canvasSensitityValue = (sensitivityScrollbar.value * 10);
+        sensitivityText.text = canvasSensitityValue.ToString();
+        player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
+    }
 
 }

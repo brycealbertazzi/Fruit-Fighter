@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour
             FindObjectOfType<Player>().gameObject.GetComponent<AudioSource>().PlayOneShot(enemyHitSound, 0.3f);
             ParticleSystem gotHitPS = Instantiate(gotHitEffect, transform.position + new Vector3(0, 0.65f, 0), Quaternion.identity) as ParticleSystem;
             gotHitPS.Play();
+            Destroy(gotHitPS.gameObject, 1);
         }
     }
 

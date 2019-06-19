@@ -39,12 +39,9 @@ public class Player : MonoBehaviour
     }
 
     [SerializeField] private float playerSpeed;
-    float timeSinceJump = 10; //An arbitrary value which allows jumping
     void FixedUpdate() {
         if (GameManager.instance.state == GameManager.GameStates.GameOn)
         {
-            timeSinceJump += Time.fixedDeltaTime;
-            RotateWithMouse();
             //Handle movement w/ rigidbodies
             if (Input.GetAxisRaw("Vertical") > 0)
             {
@@ -79,6 +76,7 @@ public class Player : MonoBehaviour
                 }
             }
 
+            RotateWithMouse();
 
             if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading)
             {
