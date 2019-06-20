@@ -19,7 +19,6 @@ public class SpawnPoints : MonoBehaviour
     {
         if (GameManager.instance.state == GameManager.GameStates.GameOn && (GameManager.instance.totalEnemiesOnMap < GameManager.instance.maxEnemiesAllowedOnMap))
         {
-            Debug.Log("Enemy Spawned");
             GameObject instEnemy = Instantiate(enemy, transform.position, Quaternion.identity, enemyParentTransform);
             GameManager.instance.totalEnemiesOnMap++;
         }

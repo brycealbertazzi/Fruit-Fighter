@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    public static float enemySpeed; 
 
     private GameObject target;
     private NavMeshAgent navmesh;
@@ -13,7 +14,10 @@ public class Enemy : MonoBehaviour
     private bool isAttacking = false;
     private bool isDead = false;
 
-    [SerializeField] private int health = 100;
+    [SerializeField] private int health;
+    public static int staticEnemyHealth;
+    public static int pointsPerKill;
+    public int thisPointsPerKill;
 
     void Start()
     {
@@ -21,6 +25,9 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         target = FindObjectOfType<Player>().gameObject;
         enemyMesh = transform.Find("EnemyDroid").transform.Find("Starwars_Droid").GetComponent<SkinnedMeshRenderer>();
+        GetComponent<NavMeshAgent>().speed = enemySpeed;
+        health = staticEnemyHealth;
+        thisPointsPerKill = pointsPerKill;
     }
 
     void Update()
@@ -76,7 +83,7 @@ public class Enemy : MonoBehaviour
         enemyMesh.enabled = false;
         StartCoroutine("DeathEffect");
         GetComponent<BoxCollider>().enabled = false;
-        GameManager.instance.UpdateScore();
+        GameManager.instance.UpdateScore(this);
     }
 
     [SerializeField] private ParticleSystem deathEffect;
@@ -98,9 +105,8 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Debug.Log("Hit");
-            DamagePlayer(damageDealtOnHit);
             yield return new WaitForSeconds(1 / hitsPerSecond);
+            DamagePlayer(damageDealtOnHit);
             StartCoroutine(DamagePlayerCoroutine());
         }
     }

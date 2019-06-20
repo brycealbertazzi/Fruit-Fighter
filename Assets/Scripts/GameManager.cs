@@ -63,9 +63,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private int pointsPerKill = 10;
-    public void UpdateScore() {
-        playerScore += pointsPerKill;
+    private int NumDifficultyIncreases = 0;
+    void IncreaseDifficulty() {
+        NumDifficultyIncreases++;
+        if (maxEnemiesAllowedOnMap < 75)
+        {
+            maxEnemiesAllowedOnMap += 5;
+        }
+        if (NumDifficultyIncreases % 2 == 0 && Enemy.enemySpeed < 3)
+        {
+            Enemy.enemySpeed += 0.25f;
+        }
+        if (NumDifficultyIncreases % 3 == 0 && Enemy.staticEnemyHealth < 200)
+        {
+            Enemy.staticEnemyHealth += 50;
+            Enemy.pointsPerKill += 10;
+        }
+    }
+
+    public void UpdateScore(Enemy enemy) {
+        playerScore += enemy.thisPointsPerKill;
         score.text = playerScore.ToString();
     }
 
@@ -94,18 +111,20 @@ public class GameManager : MonoBehaviour
         state = GameStates.PreGame;
         PregameCanvas.GetComponent<Canvas>().enabled = true;
         GameCanvas.GetComponent<Canvas>().enabled = false;
-        GameOverCanvas.GetComponent<Canvas>().enabled = false; ;
+        GameOverCanvas.GetComponent<Canvas>().enabled = false;
         mainCamera.GetComponent<Camera>().enabled = true; //Show game through main camera
         ResetGame();
         player.GetComponent<Player>().ResetPlayer();
     }
 
+    [SerializeField] private float secondsPerUpDifficulty;
     public void GameOn() {
         state = GameStates.GameOn;
         GameCanvas.GetComponent<Canvas>().enabled = true;
         PregameCanvas.GetComponent<Canvas>().enabled = false;
         GameOverCanvas.GetComponent<Canvas>().enabled = false;
         mainCamera.GetComponent<Camera>().enabled = false; //Show game through player camera
+        InvokeRepeating("IncreaseDifficulty", secondsPerUpDifficulty, secondsPerUpDifficulty);
         InvokeRepeating("UpdateTime", 1, 1); //Update the time the game has been going on for once per second
         foreach (SpawnPoints point in FindObjectsOfType<SpawnPoints>()) {
             point.InvokeRepeating("SpawnEnemy", point.initialRoundSpawnDelay, point.timeBetweenSpawns);
@@ -129,6 +148,7 @@ public class GameManager : MonoBehaviour
             point.CancelInvoke("SpawnEnemy");
         }
         CancelInvoke("UpdateTime");
+        CancelInvoke("IncreaseDifficulty");
         GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = time.text;
     }
 
@@ -138,6 +158,11 @@ public class GameManager : MonoBehaviour
         score.text = playerScore.ToString();
         time.text = "0:00";
         totalEnemiesOnMap = 0;
+        NumDifficultyIncreases = 0;
+        maxEnemiesAllowedOnMap = 15;
+        Enemy.staticEnemyHealth = 50;
+        Enemy.enemySpeed = 1;
+        Enemy.pointsPerKill = 10;
     }
 
     //Handle Player Prefs
@@ -170,10 +195,10 @@ public class GameManager : MonoBehaviour
         }
         if (thisSeconds < 10)
         {
-            //GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = thisMinutes.ToString() + ":0" + thisSeconds.ToString();
+            GameOverCanvas.transform.Find("High Time").GetComponent<Text>().text = thisMinutes.ToString() + ":0" + thisSeconds.ToString();
         }
         else {
-            //GameOverCanvas.transform.Find("Time Survived").GetComponent<Text>().text = thisMinutes.ToString() + ":" + thisSeconds.ToString();
+            GameOverCanvas.transform.Find("High Time").GetComponent<Text>().text = thisMinutes.ToString() + ":" + thisSeconds.ToString();
         }
     }
 
@@ -192,6 +217,11 @@ public class GameManager : MonoBehaviour
         float canvasSensitityValue = (sensitivityScrollbar.value * 10);
         sensitivityText.text = canvasSensitityValue.ToString();
         player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
+    }
+
+    [SerializeField] GameObject instructionsPanel;
+    public void HideInstructionsPanel() {
+        instructionsPanel.SetActive(false);
     }
 
 }

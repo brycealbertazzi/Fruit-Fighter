@@ -119,8 +119,8 @@ MonoBehaviour:
   playerSlider: {fileID: 0}
   clipDisplay: {fileID: 0}
   playerSpeed: 4
-  sensitivity: 2
-  bulletSpeed: 20
+  sensitivity: 1.5
+  bulletSpeed: 50
   fireRate: 5
   fireSound: {fileID: 8300000, guid: 91a2251ab72d00b4981f93b998f25950, type: 3}
   playerHit: {fileID: 8300000, guid: 1c784047ea995044297a6d84d4ea0a23, type: 3}

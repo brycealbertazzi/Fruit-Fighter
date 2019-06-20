@@ -862,7 +862,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.77, y: 1.81, z: 0.54}
+  m_Size: {x: 0.77, y: 1.81, z: 0.91}
   m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!114 &1918614298289145639
 MonoBehaviour:
@@ -876,7 +876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f6e0f1ac1a09a4098319e81575c734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 0
+  thisPointsPerKill: 0
   gotHitEffect: {fileID: 5482494417867782624, guid: 6b1526d54f419644fa725e181f9f08a7,
     type: 3}
   enemyHitSound: {fileID: 8300000, guid: 78990ca28f0193149a33b08da6c4d157, type: 3}
