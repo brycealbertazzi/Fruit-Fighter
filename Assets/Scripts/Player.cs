@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private Animator pAnim;
     [SerializeField] private Slider playerSlider;
     [SerializeField] private Text clipDisplay;
+    [SerializeField] private Text healthDisplay;
 
     private bool hasMaxClip;
     private bool isReloading;
@@ -124,6 +125,7 @@ public class Player : MonoBehaviour
 
     void UpdateHealthDisplay() {
         playerSlider.value = (currentHealth / maxHealth);
+        healthDisplay.text = currentHealth.ToString();
     }
 
     [SerializeField] private AudioClip playerHit;

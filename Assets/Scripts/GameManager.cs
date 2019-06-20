@@ -219,9 +219,4 @@ public class GameManager : MonoBehaviour
         player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
     }
 
-    [SerializeField] GameObject instructionsPanel;
-    public void HideInstructionsPanel() {
-        instructionsPanel.SetActive(false);
-    }
-
 }
