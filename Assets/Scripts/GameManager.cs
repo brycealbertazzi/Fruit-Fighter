@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     private Text score, time;
     private int playerScore;
     [SerializeField] private GameObject GameCanvas, GameOverCanvas, PregameCanvas;
+    public GameObject MenuPanel;
 
     void Start()
     {
@@ -53,13 +54,14 @@ public class GameManager : MonoBehaviour
         time = GameCanvas.transform.Find("Time").GetComponent<Text>();
 
         LoadPreviousSensitivityValues(); //Start game with previously set sensitivity value
+        MenuPanel.SetActive(false);
         PreGame();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M)) {
-            player.GetComponent<AudioSource>().mute = !player.GetComponent<AudioSource>().mute; //If true make false, if false make truett
+        if (Input.GetKeyDown(KeyCode.Escape) && state == GameStates.GameOn) {
+            ShowMenuPanel();
         }
     }
 
@@ -165,6 +167,22 @@ public class GameManager : MonoBehaviour
         Enemy.pointsPerKill = 10;
     }
 
+    void ShowMenuPanel() {
+        Time.timeScale = 0;
+        MenuPanel.SetActive(true);
+    }
+
+    public void MenuPanelResume() {
+        MenuPanel.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void MenuPanelQuit() {
+        MenuPanel.SetActive(false);
+        Time.timeScale = 1;
+        GameOver();
+    }
+
     //Handle Player Prefs
     const string HIGH_SCORE_KEY = "HighScore";
     const string HIGH_TIME_KEY = "HighTime";
@@ -213,10 +231,22 @@ public class GameManager : MonoBehaviour
     }
 
     void LoadPreviousSensitivityValues() {
-        sensitivityScrollbar.value = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
-        float canvasSensitityValue = (sensitivityScrollbar.value * 10);
-        sensitivityText.text = canvasSensitityValue.ToString();
-        player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
+        //Check if player prefs has a value stored for sensitivity, if not set it to a default value of 5
+        if (!PlayerPrefs.HasKey(SENSITIVITY_KEY))
+        {
+            sensitivityScrollbar.value = 0.5f;
+            PlayerPrefs.SetFloat(SENSITIVITY_KEY, sensitivityScrollbar.value);
+            float canvasSensitityValue = (sensitivityScrollbar.value * 10);
+            sensitivityText.text = canvasSensitityValue.ToString();
+            player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
+        }
+        else
+        {
+            sensitivityScrollbar.value = PlayerPrefs.GetFloat(SENSITIVITY_KEY);
+            float canvasSensitityValue = (sensitivityScrollbar.value * 10);
+            sensitivityText.text = canvasSensitityValue.ToString();
+            player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;
+        }
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
 
             RotateWithMouse();
 
-            if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading)
+            if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && bulletsInClip > 0 && !isReloading && (!EventSystem.current.IsPointerOverGameObject() || !GameManager.instance.MenuPanel.active))
             {
                 pAnim.SetBool("isShooting", true);
                 InvokeRepeating("FireMachineGunBullet", 0, (1 / fireRate));
