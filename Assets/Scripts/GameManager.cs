@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.M)) {
-            audioSource.mute = !audioSource.mute; //If true make false, if false make truett
+            player.GetComponent<AudioSource>().mute = !player.GetComponent<AudioSource>().mute; //If true make false, if false make truett
         }
     }
 

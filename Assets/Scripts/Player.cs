@@ -89,6 +89,14 @@ public class Player : MonoBehaviour
                 pAnim.SetBool("isShooting", false);
                 CancelInvoke("FireMachineGunBullet");
             }
+            //Keep track of if the reload text alpha and if it is increasing
+            if (reloadText.color.a >= 1)
+            {
+                alphaIsIncreasing = false;
+            }
+            else if (reloadText.color.a <= 0) {
+                alphaIsIncreasing = true;
+            }
         }
     }
 
@@ -107,6 +115,9 @@ public class Player : MonoBehaviour
             firedBullet.GetComponent<Rigidbody>().velocity = firedBullet.transform.forward * bulletSpeed;
             GetComponent<AudioSource>().PlayOneShot(fireSound, 0.6f);
             bulletsInClip--;
+            if (bulletsInClip <= 0 && !isReloading) { //Fade Reload text
+                StartCoroutine(FadeReloadText());
+            }
             hasMaxClip = false;
             UpdateClipDisplay();
         }
@@ -117,6 +128,30 @@ public class Player : MonoBehaviour
         hasMaxClip = true;
         isReloading = false;
         UpdateClipDisplay();
+    }
+
+    [SerializeField] private Text reloadText;
+    [SerializeField] private float reloadTextFadeRate;
+    bool alphaIsIncreasing = true;
+    IEnumerator FadeReloadText() {
+        yield return null;
+        if (alphaIsIncreasing)
+        {
+            reloadText.color = new Color(reloadText.color.r, reloadText.color.g, reloadText.color.b, reloadText.color.a + (Time.deltaTime / reloadTextFadeRate)); //Fade text in
+        }
+        else if (!alphaIsIncreasing) {
+            reloadText.color = new Color(reloadText.color.r, reloadText.color.g, reloadText.color.b, reloadText.color.a - (Time.deltaTime / reloadTextFadeRate)); //Fade text out
+        }
+        //Check if player reloaded
+        if (isReloading || bulletsInClip > 0)
+        {
+            reloadText.color = new Color(reloadText.color.r, reloadText.color.g, reloadText.color.b, 0);
+            StopCoroutine(FadeReloadText());
+        }
+        else
+        {
+            StartCoroutine(FadeReloadText());
+        }
     }
 
     void UpdateClipDisplay() {
