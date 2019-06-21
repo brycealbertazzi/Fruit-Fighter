@@ -234,8 +234,8 @@ public class GameManager : MonoBehaviour
         //Check if player prefs has a value stored for sensitivity, if not set it to a default value of 5
         if (!PlayerPrefs.HasKey(SENSITIVITY_KEY))
         {
+            PlayerPrefs.SetFloat(SENSITIVITY_KEY, 0.5f);
             sensitivityScrollbar.value = 0.5f;
-            PlayerPrefs.SetFloat(SENSITIVITY_KEY, sensitivityScrollbar.value);
             float canvasSensitityValue = (sensitivityScrollbar.value * 10);
             sensitivityText.text = canvasSensitityValue.ToString();
             player.GetComponent<Player>().sensitivity = (canvasSensitityValue / 4) + 0.25f;

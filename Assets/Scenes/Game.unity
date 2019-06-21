@@ -268,7 +268,7 @@ PrefabInstance:
     - target: {fileID: 4063383427039243884, guid: d6d04af6cdac43040bd591c21a5158fc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.125
       objectReference: {fileID: 0}
     - target: {fileID: 4063383427039243884, guid: d6d04af6cdac43040bd591c21a5158fc,
         type: 3}
@@ -354,6 +354,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ClearFlags
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4063383427378620736, guid: d6d04af6cdac43040bd591c21a5158fc,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7998054877761508954, guid: d6d04af6cdac43040bd591c21a5158fc,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6d04af6cdac43040bd591c21a5158fc, type: 3}
