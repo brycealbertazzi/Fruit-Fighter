@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && state == GameStates.GameOn) {
+        if (Input.GetKeyDown(KeyCode.Q) && state == GameStates.GameOn) {
             ShowMenuPanel();
         }
     }
@@ -121,6 +121,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float secondsPerUpDifficulty;
     public void GameOn() {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         state = GameStates.GameOn;
         GameCanvas.GetComponent<Canvas>().enabled = true;
         PregameCanvas.GetComponent<Canvas>().enabled = false;
@@ -134,6 +136,8 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameOver() {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         state = GameStates.GameOver;
         CheckHighScore(playerScore);
         CheckHighTime((minutes * 60) + seconds);
@@ -170,11 +174,15 @@ public class GameManager : MonoBehaviour
     void ShowMenuPanel() {
         Time.timeScale = 0;
         MenuPanel.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void MenuPanelResume() {
         MenuPanel.SetActive(false);
         Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void MenuPanelQuit() {

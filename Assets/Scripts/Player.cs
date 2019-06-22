@@ -105,6 +105,7 @@ public class Player : MonoBehaviour
     void RotateWithMouse()
     {
         head.transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivity, 0, Space.Self);
+        Debug.Log(Input.mousePosition);
     }
 
     public float bulletSpeed;
